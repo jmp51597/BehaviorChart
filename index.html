@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="src/style.css">
+    <title>behaviorchart</title>
+  </head>
+  <body>
+    <div id="app">
+  <h1>Behavior Chart</h1>
+  <input id="email" type="email" placeholder="Email" />
+  <input id="password" type="password" placeholder="Password" />
+  <button id="signup-btn">Sign Up</button>
+  <button id="login-btn">Log In</button>
+  <p id="status"></p>
+</div>
+<div id="home-page">
+  <h2>Student Behavior Rating</h2>
+  <input id="student-name" type="text" placeholder="Student name" />
+  <div class="rating">
+    <button class="face" data-rating="happy">😊</button>
+    <button class="face" data-rating="medium">😐</button>
+    <button class="face" data-rating="sad">😢</button>
+  </div>
+  <p id="rating-output"></p>
+</div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

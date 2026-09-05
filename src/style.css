@@ -1,0 +1,17 @@
+.rating {
+  display: flex;
+  gap: 12px;
+  margin: 12px 0;
+}
+.face {
+  font-size: 2rem;
+  padding: 8px 16px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+}
+.face.selected {
+  border-color: #333;
+  background: #f0f0f0;
+}
