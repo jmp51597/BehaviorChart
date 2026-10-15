@@ -25,8 +25,33 @@ document.querySelector("#login-btn").addEventListener("click", async () => {
   }
 });
 
+document.querySelector(".rating").addEventListener("click", (event) => {
+  if (nameInput.value.trim() === "") {
+    alert("Please enter a student name before rating.");
+    return;
+  }
+
+  if (!event.target.classList.contains("face")) {
+    return;
+  }
+
+  faceButtons.forEach((b) => b.classList.remove("selected"));
+  event.target.classList.add("selected");
+
+  const name = nameInput.value.trim();
+  ratingOutput.textContent = `${name}: ${event.target.dataset.rating}`;
+});
+
+
 onAuthStateChanged(auth, (user) => {
   statusEl.textContent = user ? `Logged in as ${user.email}` : "Not logged in";
+});
+
+onAuthStateChanged(auth, (user) => {
+  document.querySelector("#auth-page").hidden = !!user;
+  document.querySelector("#rating-page").hidden = !user;
+
+ 
 });
 
 const nameInput = document.querySelector("#student-name");
@@ -42,3 +67,4 @@ faceButtons.forEach((btn) => {
     ratingOutput.textContent = `${name}: ${btn.dataset.rating}`;
   });
 });
+
