@@ -1,17 +1,94 @@
-.rating {
-  display: flex;
-  gap: 12px;
-  margin: 12px 0;
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 16px;
+  color: #222;
 }
-.face {
-  font-size: 2rem;
-  padding: 8px 16px;
-  border: 2px solid transparent;
-  border-radius: 8px;
+
+#app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* The hidden attribute must win over display rules */
+[hidden] {
+  display: none !important;
+}
+
+.error {
+  color: #b00020;
+}
+
+/* Teacher home */
+#student-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.student-card {
+  padding: 16px 24px;
+  font-size: 1.1rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: #fafafa;
+  cursor: pointer;
+}
+
+.student-card:hover {
+  background: #f0f0f0;
+}
+
+/* Chart grid */
+#chart-grid {
+  overflow-x: auto;
+}
+
+table.chart {
+  border-collapse: collapse;
+}
+
+table.chart th,
+table.chart td {
+  border: 1px solid #ccc;
+  padding: 4px;
+  text-align: center;
+}
+
+table.chart thead th {
+  font-size: 0.85rem;
+  max-width: 100px;
+}
+
+table.chart tbody th {
+  text-align: left;
+  white-space: nowrap;
+  padding-right: 12px;
+}
+
+.cell {
+  width: 48px;
+  height: 48px;
+  font-size: 1.8rem;
+  border: none;
   background: none;
   cursor: pointer;
 }
-.face.selected {
-  border-color: #333;
+
+.cell:hover:not(:disabled) {
   background: #f0f0f0;
+}
+
+.cell:disabled {
+  cursor: default;
+  color: inherit;
+}
+
+.notes {
+  width: 180px;
+  padding: 6px;
 }
