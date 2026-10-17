@@ -43,3 +43,29 @@ Reference charts (paper behavior charts from Teachers Pay Teachers, incl. "Stude
 - Exact set of default categories, and how a teacher customizes them per kid.
 - Whether goals/rewards are a fixed threshold system (like the paper chart) or teacher-defined per kid.
 - Whether the "ping" for recording behavior is a push notification, an in-app banner, or something else.
+
+## Data model (Firestore)
+
+### `users/{uid}`
+One doc per account. The doc ID is the Firebase Auth UID.
+- `name` (string): display name, e.g. "Ms. Test"
+- `role` (string): `"teacher"` or `"parent"`
+
+### `students/{studentId}`
+One doc per child.
+- `name` (string): the student's name
+- `teacherIds` (array of UIDs): teachers who can view and edit this chart
+- `parentIds` (array of UIDs): parents who can view (read-only)
+- `periods` (array of strings): rows of the grid, e.g. `["Morning Work", "Math", "Recess"]`
+- `categories` (array of strings): columns of the grid, e.g. `["Listen to Teacher", "Stay in Seat"]`
+
+### `students/{studentId}/days/{YYYY-MM-DD}`
+One doc per student per day (one read loads the whole day's grid).
+- `ratings` (map): key is `"<period>__<category>"`, value is `0` (sad), `1` (neutral) or `2` (happy)
+- `notes` (map): key is the period, value is the teacher's note for that row
+- `updatedBy` (UID) and `updatedAt` (timestamp): who saved last, and when
+
+### Test data
+- Teacher test user: `teacher@test.com`
+- Parent test user: `parent@test.com`
+- Test student: `students/test-student`
