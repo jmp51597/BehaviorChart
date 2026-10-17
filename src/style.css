@@ -1,94 +1,419 @@
-body {
-  font-family: system-ui, sans-serif;
-  margin: 0;
-  padding: 16px;
-  color: #222;
+/* ===== Tokens =====
+   The chart is a paper sticker chart: cool white paper, navy ink,
+   and three sticker colors. A tough period is periwinkle, not red,
+   so a hard moment never reads as a failure. */
+:root {
+  --paper: #fafbfd;
+  --ink: #23304a;
+  --ink-soft: #5a6680;
+  --rule: #dce3ef;
+
+  --happy: #2f9e5b;
+  --happy-bg: #ddf3e5;
+  --okay: #c98f0a;
+  --okay-bg: #fcf0cc;
+  --tough: #5f78c0;
+  --tough-bg: #e3e9f8;
+
+  --error: #b3261e;
+  --radius: 10px;
+  --font: "Atkinson Hyperlegible Next", system-ui, sans-serif;
 }
 
-#app-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 12px;
-  margin-bottom: 16px;
-  border-bottom: 1px solid #ddd;
+* {
+  box-sizing: border-box;
 }
 
-/* The hidden attribute must win over display rules */
 [hidden] {
   display: none !important;
 }
 
-.error {
-  color: #b00020;
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.5;
 }
 
-/* Teacher home */
-#student-list {
+main {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+h1,
+h2 {
+  margin: 0 0 4px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: 2.2rem;
+}
+
+h2 {
+  font-size: 1.9rem;
+}
+
+.lede {
+  margin: 0 0 24px;
+  color: var(--ink-soft);
+  max-width: 60ch;
+}
+
+.error {
+  color: var(--error);
+  margin: 12px 0 0;
+}
+
+.error:empty {
+  display: none;
+}
+
+/* ===== Buttons and inputs ===== */
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--ink);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 12px 22px;
+  font-weight: 700;
+}
+
+.btn-primary:hover {
+  background: #33446a;
+}
+
+.btn-quiet {
+  background: none;
+  border: none;
+  padding: 8px 4px;
+  color: var(--ink-soft);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.btn-quiet:hover {
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 3px solid var(--tough);
+  outline-offset: 2px;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+  font: inherit;
+  color: inherit;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid var(--rule);
+  border-radius: 8px;
+  background: #fff;
+}
+
+input:focus {
+  border-color: var(--tough);
+  outline: none;
+}
+
+/* ===== Header ===== */
+#app-header {
   display: flex;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-bottom: 1.5px solid var(--rule);
+  background: #fff;
+}
+
+.brand {
+  font-weight: 700;
+}
+
+.brand-mark,
+.emo {
+  display: inline-block;
+  margin: 0 0.3em 0 0;
+}
+
+.emo {
+  margin: 0 0.15em;
+}
+
+.account {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+/* ===== Login: a sheet of ruled paper ===== */
+#view-login {
+  min-height: calc(100vh - 96px);
+  display: flex;
+  align-items: center;
+}
+
+.login {
+  width: 100%;
+  max-width: 420px;
+  padding: 36px 32px 32px 48px;
+  background:
+    linear-gradient(to right, transparent 28px, #f3c6c6 28px, #f3c6c6 30px, transparent 30px),
+    repeating-linear-gradient(to bottom, #fff 0, #fff 31px, var(--rule) 31px, var(--rule) 32px);
+  border: 1.5px solid var(--rule);
+  border-radius: var(--radius);
+}
+
+.login label {
+  display: block;
+  font-weight: 700;
+  margin: 16px 0 6px;
+}
+
+.login-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+/* ===== Teacher home ===== */
+#student-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 12px;
 }
 
 .student-card {
-  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  text-align: left;
   font-size: 1.1rem;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  background: #fafafa;
-  cursor: pointer;
+  font-weight: 700;
+  background: #fff;
+  border: 1.5px solid var(--rule);
+  border-radius: var(--radius);
 }
 
 .student-card:hover {
-  background: #f0f0f0;
+  border-color: var(--ink-soft);
 }
 
-/* Chart grid */
+.initials {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--happy-bg);
+  color: var(--happy);
+  font-size: 1rem;
+}
+
+/* ===== Chart page ===== */
+#back-btn {
+  margin: -8px 0 12px -4px;
+}
+
+.chart-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.chart-head .lede {
+  margin-bottom: 0;
+}
+
+.tally {
+  min-width: 220px;
+}
+
+.tally p {
+  margin: 0 0 6px;
+  font-weight: 700;
+}
+
+.tally p::before {
+  content: "😊";
+  margin-right: 0.35em;
+}
+
+.tally-bar {
+  height: 10px;
+  border-radius: 5px;
+  background: var(--rule);
+  overflow: hidden;
+}
+
+#chart-bar {
+  height: 100%;
+  width: 0;
+  background: var(--happy);
+  transition: width 0.3s ease;
+}
+
+.hint {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  margin: 20px 0 12px;
+}
+
+/* ===== The grid: the one bold thing ===== */
 #chart-grid {
   overflow-x: auto;
+  background: #fff;
+  border: 1.5px solid var(--rule);
+  border-radius: var(--radius);
 }
 
 table.chart {
   border-collapse: collapse;
+  width: 100%;
 }
 
 table.chart th,
 table.chart td {
-  border: 1px solid #ccc;
-  padding: 4px;
+  border-bottom: 1.5px solid var(--rule);
+  padding: 10px 8px;
   text-align: center;
+  vertical-align: middle;
+}
+
+table.chart tr:last-child th,
+table.chart tr:last-child td {
+  border-bottom: none;
 }
 
 table.chart thead th {
   font-size: 0.85rem;
-  max-width: 100px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  line-height: 1.25;
+  min-width: 84px;
+  padding-top: 14px;
 }
 
+/* Period names stay visible while the grid scrolls sideways on a phone */
 table.chart tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: #fff;
   text-align: left;
   white-space: nowrap;
-  padding-right: 12px;
+  font-weight: 700;
+  padding: 10px 16px;
+  border-right: 1.5px solid var(--rule);
 }
 
+table.chart thead th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: #fff;
+  border-right: 1.5px solid var(--rule);
+}
+
+table.chart th.notes-col,
+table.chart td.notes-col {
+  text-align: left;
+  min-width: 200px;
+}
+
+/* Each cell is a sticker spot */
 .cell {
-  width: 48px;
-  height: 48px;
-  font-size: 1.8rem;
-  border: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 2px dashed #c3cede;
   background: none;
-  cursor: pointer;
+  font-size: 1.8rem;
+  line-height: 1;
+  padding: 0;
 }
 
 .cell:hover:not(:disabled) {
-  background: #f0f0f0;
+  border-color: var(--ink-soft);
+}
+
+.cell[data-rating="2"] {
+  background: var(--happy-bg);
+  border: 2px solid var(--happy);
+}
+
+.cell[data-rating="1"] {
+  background: var(--okay-bg);
+  border: 2px solid var(--okay);
+}
+
+.cell[data-rating="0"] {
+  background: var(--tough-bg);
+  border: 2px solid var(--tough);
 }
 
 .cell:disabled {
   cursor: default;
-  color: inherit;
 }
 
-.notes {
-  width: 180px;
-  padding: 6px;
+/* A sticker pressing onto paper, only when the teacher taps */
+.cell.stamp {
+  animation: stamp 0.28s ease-out;
+}
+
+@keyframes stamp {
+  0% { transform: scale(1.25) rotate(-8deg); }
+  60% { transform: scale(0.94) rotate(2deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cell.stamp {
+    animation: none;
+  }
+  #chart-bar {
+    transition: none;
+  }
+}
+
+/* ===== Phones ===== */
+@media (max-width: 600px) {
+  main {
+    padding: 20px 16px 48px;
+  }
+  h2 {
+    font-size: 1.6rem;
+  }
+  #whoami {
+    display: none;
+  }
+  .login {
+    padding: 28px 20px 24px 40px;
+  }
+  .cell {
+    width: 48px;
+    height: 48px;
+    font-size: 1.5rem;
+  }
 }

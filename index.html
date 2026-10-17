@@ -4,53 +4,77 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="src/style.css">
     <title>Behavior Chart</title>
   </head>
   <body>
     <!-- Shown on every screen once logged in -->
     <header id="app-header" hidden>
-      <span id="whoami"></span>
-      <button id="logout-btn">Log Out</button>
+      <span class="brand"><span class="brand-mark" aria-hidden="true">😊</span> Behavior Chart</span>
+      <span class="account">
+        <span id="whoami"></span>
+        <button id="logout-btn" class="btn-quiet">Log out</button>
+      </span>
     </header>
 
-    <!-- Login -->
-    <section id="view-login" class="view" hidden>
-      <h1>Behavior Chart</h1>
-      <input id="email" type="email" placeholder="Email" />
-      <input id="password" type="password" placeholder="Password" />
-      <button id="signup-btn">Sign Up</button>
-      <button id="login-btn">Log In</button>
-      <p id="status"></p>
-    </section>
+    <main>
+      <!-- Login -->
+      <section id="view-login" class="view" hidden>
+        <div class="login">
+          <h1><span class="brand-mark" aria-hidden="true">😊</span> Behavior Chart</h1>
+          <p class="lede">One shared chart for every teacher who works with your student, and a window for their parents.</p>
+          <label for="email">Email</label>
+          <input id="email" type="email" autocomplete="email" />
+          <label for="password">Password</label>
+          <input id="password" type="password" autocomplete="current-password" />
+          <div class="login-actions">
+            <button id="login-btn" class="btn-primary">Log in</button>
+            <button id="signup-btn" class="btn-quiet">Create account</button>
+          </div>
+          <p id="status" class="error" role="alert"></p>
+        </div>
+      </section>
 
-    <!-- Teacher home: list of students -->
-    <section id="view-teacher" class="view" hidden>
-      <h2>My Students</h2>
-      <div id="student-list"></div>
-    </section>
+      <!-- Teacher home: list of students -->
+      <section id="view-teacher" class="view" hidden>
+        <h2>My students</h2>
+        <p class="lede">Pick a student to fill in today's chart.</p>
+        <div id="student-list"></div>
+      </section>
 
-    <!-- Parent home (built in Phase 7) -->
-    <section id="view-parent" class="view" hidden>
-      <h2>My Child</h2>
-      <p>The parent view is coming in Phase 7.</p>
-    </section>
+      <!-- Parent home (built in Phase 7) -->
+      <section id="view-parent" class="view" hidden>
+        <h2>My child</h2>
+        <p class="lede">You'll be able to follow your child's chart here soon.</p>
+      </section>
 
-    <!-- One student's chart for today -->
-    <section id="view-chart" class="view" hidden>
-      <button id="back-btn">&larr; Back to students</button>
-      <h2 id="chart-title"></h2>
-      <p id="chart-date"></p>
-      <div id="chart-grid"></div>
-      <p id="chart-total"></p>
-      <p id="chart-error" class="error"></p>
-    </section>
+      <!-- One student's chart for today -->
+      <section id="view-chart" class="view" hidden>
+        <button id="back-btn" class="btn-quiet">&larr; All students</button>
+        <div class="chart-head">
+          <div>
+            <h2 id="chart-title"></h2>
+            <p id="chart-date" class="lede"></p>
+          </div>
+          <div class="tally">
+            <p id="chart-total"></p>
+            <div class="tally-bar"><div id="chart-bar"></div></div>
+          </div>
+        </div>
+        <p class="hint">Tap a box to rate it: <span class="emo">😊</span> then <span class="emo">😐</span> then <span class="emo">😞</span>, and once more to clear.</p>
+        <div id="chart-grid"></div>
+        <p id="chart-error" class="error" role="alert"></p>
+      </section>
 
-    <!-- Shown when an account has no users/{uid} doc -->
-    <section id="view-norole" class="view" hidden>
-      <h2>Account not set up</h2>
-      <p>This account doesn't have a role yet. Ask a teacher to add you.</p>
-    </section>
+      <!-- Shown when an account has no users/{uid} doc -->
+      <section id="view-norole" class="view" hidden>
+        <h2>Your account isn't set up yet</h2>
+        <p class="lede">Ask your child's teacher to add you, then log in again.</p>
+      </section>
+    </main>
 
     <script type="module" src="/src/main.js"></script>
   </body>

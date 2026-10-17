@@ -29,9 +29,11 @@ const chartDateEl = document.querySelector("#chart-date");
 const chartGridEl = document.querySelector("#chart-grid");
 const chartTotalEl = document.querySelector("#chart-total");
 const chartErrorEl = document.querySelector("#chart-error");
+const chartBarEl = document.querySelector("#chart-bar");
 
 // Rating values stored in Firestore: 0 = sad, 1 = neutral, 2 = happy
 const FACES = { 0: "😞", 1: "😐", 2: "😊" };
+const FACE_NAMES = { 0: "tough", 1: "okay", 2: "happy" };
 // Clicking a cell cycles: empty -> happy -> neutral -> sad -> empty
 const NEXT_RATING = { none: 2, 2: 1, 1: 0, 0: "none" };
 
@@ -119,14 +121,25 @@ async function loadTeacherHome() {
 
   studentListEl.textContent = "";
   if (snap.empty) {
-    studentListEl.textContent = "No students yet.";
+    studentListEl.textContent = "You don't have any students yet. Once a student is added with you as their teacher, they'll show up here.";
     return;
   }
 
   snap.forEach((studentDoc) => {
     const card = document.createElement("button");
     card.className = "student-card";
-    card.textContent = studentDoc.data().name;
+    const name = studentDoc.data().name;
+    const initials = document.createElement("span");
+    initials.className = "initials";
+    initials.textContent = name
+      .split(" ")
+      .map((part) => part[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
+    const label = document.createElement("span");
+    label.textContent = name;
+    card.append(initials, label);
     card.addEventListener("click", () => openChart(studentDoc.id));
     studentListEl.appendChild(card);
   });
@@ -175,6 +188,7 @@ function renderGrid({ student, ratings, notes, dayRef, editable }) {
   });
   const notesTh = document.createElement("th");
   notesTh.textContent = "Notes";
+  notesTh.className = "notes-col";
   headRow.appendChild(notesTh);
 
   // One row per period
@@ -190,7 +204,17 @@ function renderGrid({ student, ratings, notes, dayRef, editable }) {
       const cell = row.insertCell();
       const btn = document.createElement("button");
       btn.className = "cell";
-      btn.textContent = FACES[ratings[key]] ?? "";
+      const paint = () => {
+        const rating = ratings[key];
+        btn.textContent = FACES[rating] ?? "";
+        if (rating === undefined) delete btn.dataset.rating;
+        else btn.dataset.rating = rating;
+        btn.setAttribute(
+          "aria-label",
+          `${period}, ${category}: ${FACE_NAMES[rating] ?? "not rated"}`
+        );
+      };
+      paint();
       btn.disabled = !editable;
 
       btn.addEventListener("click", async () => {
@@ -200,8 +224,11 @@ function renderGrid({ student, ratings, notes, dayRef, editable }) {
         // Update the screen right away, then save
         if (next === "none") delete ratings[key];
         else ratings[key] = next;
-        btn.textContent = FACES[ratings[key]] ?? "";
-        updateTotal(ratings);
+        paint();
+        btn.classList.remove("stamp");
+        void btn.offsetWidth; // restart the animation
+        if (next !== "none") btn.classList.add("stamp");
+        updateTotal(ratings, student);
 
         try {
           await setDoc(dayRef, {
@@ -220,9 +247,12 @@ function renderGrid({ student, ratings, notes, dayRef, editable }) {
 
     // Notes for this period, saved when the input loses focus
     const notesCell = row.insertCell();
+    notesCell.className = "notes-col";
     const input = document.createElement("input");
     input.type = "text";
     input.className = "notes";
+    input.placeholder = "Add a note";
+    input.setAttribute("aria-label", `Notes for ${period}`);
     input.value = notes[period] || "";
     input.disabled = !editable;
     input.addEventListener("blur", async () => {
@@ -244,10 +274,12 @@ function renderGrid({ student, ratings, notes, dayRef, editable }) {
 
   chartGridEl.textContent = "";
   chartGridEl.appendChild(table);
-  updateTotal(ratings);
+  updateTotal(ratings, student);
 }
 
-function updateTotal(ratings) {
+function updateTotal(ratings, student) {
   const happy = Object.values(ratings).filter((r) => r === 2).length;
-  chartTotalEl.textContent = `😊 Happy faces today: ${happy}`;
+  const possible = student.periods.length * student.categories.length;
+  chartTotalEl.textContent = `${happy} of ${possible} happy today`;
+  chartBarEl.style.width = `${possible ? (happy / possible) * 100 : 0}%`;
 }
